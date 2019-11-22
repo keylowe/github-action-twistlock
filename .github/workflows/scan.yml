@@ -4,24 +4,24 @@ on: [push, pull_request]
 
 name: Build and Scan
 env:
-  # The Twistlock user with the CI User role
+  # The Prisma Cloud user with the CI User role
   TL_USER: ${{ secrets.TL_USER }}
   # The password for this user account
   TL_PASS: ${{ secrets.TL_PASS }}
-  # The base URL for the console -- http://console.<my_company>.com:8083 -- without a trailing /
+  # The base URL for the Console -- http://console.<my_company>.com:8083 -- without a trailing /
   TL_CONSOLE_URL: https://console-master-pcce.keith.lab.twistlock.com
-  CONTAINER_IMAGE: corp/helloworld:${{ github.sha }}
+  CONTAINER_IMAGE: keylowe/helloworld:${{ github.sha }}
 
 jobs:
   build-and-scan:
-    name: Build and Scan for Vulnerabilities
+    name: Build and Scan for Vulnerabilities and Compliance
     runs-on: ubuntu-latest
     
     steps:
     - name: Checkout
       uses: actions/checkout@master
       
-    - name: Download twistcli from Twistlock console
+    - name: Download twistcli from Prisma Cloud Console
       run: |
         curl -k -u $TL_USER:$TL_PASS --output ./twistcli http://console-master-pcce.keith.lab.twistlock.com/api/v1/util/twistcli
         # ...and ensure it's executable.
@@ -33,9 +33,9 @@ jobs:
     - name: Scan the image
       run: |
         # Run the scan with twistcli
-        # pushing the results to the Twistlock console.
+        # pushing the results to the Prisma Cloud console.
         # --details returns all vulnerabilities & compliance issues rather than just summaries.
-        # -address points to our Twistlock console
+        # -address points to our Prisma Cloud console
         # -u and -p provide credentials for the console.  These creds only need the CI User role.
         # Finally, we provide the name of the image we built with 'docker build', above.
         ./twistcli images scan --details -address $TL_CONSOLE_URL -u $TL_USER -p $TL_PASS $CONTAINER_IMAGE
