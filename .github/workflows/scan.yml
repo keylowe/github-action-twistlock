@@ -9,7 +9,7 @@ env:
   # The password for this user account
   TL_PASS: ${{ secrets.TL_PASS }}
   # The base URL for the Console -- http://console.<my_company>.com:8083 -- without a trailing /
-  TL_CONSOLE_URL: https://us-west1.cloud.twistlock.com/us-3-159209235
+  TL_CONSOLE_URL: http://us-west1.cloud.twistlock.com/us-3-159209235
   CONTAINER_IMAGE: keylowe/helloworld:${{ github.sha }}
 
 jobs:
@@ -38,7 +38,7 @@ jobs:
         # -address points to our Prisma Cloud console
         # -u and -p provide credentials for the console.  These creds only need the CI User role.
         # Finally, we provide the name of the image we built with 'docker build', above.
-        ./twistcli images scan --details -address https://us-west1.cloud.twistlock.com/us-3-1592092353 -u $TL_USER -p $TL_PASS $CONTAINER_IMAGE
+        ./twistcli images scan --details -address $TL_CONSOLE_URL -u $TL_USER -p $TL_PASS $CONTAINER_IMAGE
         # Add --vulnerability-threshold and/or --compliance-threshold to this command to
         # fail builds based on the thresholds.
         # See twistcli documentation for more details.
