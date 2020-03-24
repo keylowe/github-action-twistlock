@@ -1,1 +1,1 @@
-﻿docker run -it -e "PORT=5000" -p 5000:5000 corp/helloworld
+GitHub Action to build a container and scan it for vulnerability and compliance issues.
